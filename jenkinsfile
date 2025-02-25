@@ -31,8 +31,8 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('', 'DockerHubCred') {
-                    sh 'docker tag calculator rksingh5/calculator:latest'
-                    sh 'docker push rksingh5/calculator'
+                    sh 'docker tag calculator mtrivedi1410/calculator:latest'
+                    sh 'docker push mtrivedi1410/calculator'
                     }
                  }
             }
@@ -53,12 +53,12 @@ pipeline {
 }
  post {
         success {
-            mail to: 'rkumarsingh136@gmail.com',
+            mail to: 'trivedimaitri1@gmail.com',
                  subject: "Application Deployment SUCCESS: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "The build was successful!"
         }
         failure {
-            mail to: 'rkumarsingh136@gmail.com',
+            mail to: 'trivedimaitri1@gmail.com',
                  subject: "Application Deployment FAILURE: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "The build failed."
         }
