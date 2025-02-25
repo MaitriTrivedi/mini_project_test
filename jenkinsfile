@@ -41,12 +41,19 @@ pipeline {
      stage('Run Ansible Playbook') { 
         steps {
             script {
-              withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {   
-                ansiblePlaybook(
-                    playbook: 'deploy.yml',
-                    inventory: 'inventory'
-                )
-            }
+                    withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {   
+                        // Install Python Docker SDK with appropriate permissions
+                        sh '''
+                            python3 -m venv /tmp/venv
+                            /tmp/venv/bin/pip install --upgrade pip
+                            /tmp/venv/bin/pip install docker --break-system-packages
+                        '''
+                        // Run Ansible playbook
+                        ansiblePlaybook(
+                            playbook: 'deploy.yml',
+                            inventory: 'inventory'
+                        )
+                    }
         }
     }
  }
