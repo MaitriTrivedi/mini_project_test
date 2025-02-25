@@ -1,8 +1,8 @@
 pipeline {
     agent any
     triggers { 
-      githubPush() 
-   }
+        githubPush() 
+    }
     environment {
         DOCKER_IMAGE_NAME = 'calculator'
         GITHUB_REPO_URL = 'https://github.com/MaitriTrivedi/mini_project_test.git'
@@ -29,30 +29,30 @@ pipeline {
 
         stage('Push Docker Images') {
             steps {
-                script{
+                script {
                     docker.withRegistry('', 'DockerHubCredential') {
-                    sh 'docker tag calculator mtrivedi1410/calculator:latest'
-                    sh 'docker push mtrivedi1410/calculator'
+                        sh 'docker tag calculator mtrivedi1410/calculator:latest'
+                        sh 'docker push mtrivedi1410/calculator'
                     }
-                 }
+                }
             }
         }
 
-     stage('Run Ansible Playbook') { 
-        steps {
-            script {
-              withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {   
-                ansiblePlaybook(
-                    playbook: 'deploy.yml',
-                    inventory: 'inventory'
-                )
+        stage('Run Ansible Playbook') { 
+            steps {
+                script {
+                    withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {   
+                        ansiblePlaybook(
+                            playbook: 'deploy.yml',
+                            inventory: 'inventory'
+                        )
+                    }
+                }
             }
         }
     }
-}
- }
-}
- post {
+
+    post {
         success {
             mail to: 'trivedimaitri1@gmail.com',
                  subject: "Application Deployment SUCCESS: Build ${env.JOB_NAME} #${env.BUILD_NUMBER}",
@@ -66,6 +66,5 @@ pipeline {
         always {
             cleanWs()
         }
-      }
     }
-
+}
